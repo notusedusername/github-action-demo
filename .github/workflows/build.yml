@@ -27,6 +27,5 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          platforms: linux/arm64
           push: true
           tags: registry-tlac.duckdns.org/${{ vars.ARTIFACT_NAME }}:${{ env.version }}
