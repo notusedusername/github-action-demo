@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Get revision
-        run: echo "version=${{ github.sha }}" >> $GITHUB_ENV
+        run: echo "version=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
 
       - name: Print version
         run: echo ${{ env.version }}
