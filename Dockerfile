@@ -6,7 +6,7 @@ WORKDIR /workspace
 
 RUN ./gradlew --no-daemon :build
 
-FROM --platform=linux/arm64 eclipse-temurin:21-alpine
+FROM eclipse-temurin:21-alpine
 
 RUN addgroup -S nonroot && \
     adduser -S nonroot -G nonroot && \
