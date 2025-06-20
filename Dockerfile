@@ -6,9 +6,15 @@ WORKDIR /workspace
 
 RUN ./gradlew --no-daemon :build
 
-FROM --platform=linux/arm64 eclipse-temurin:21-alpine
+FROM eclipse-temurin:21-alpine
 
-COPY --from=build /workspace/build/libs/demo-*.jar /app/app.jar
+RUN addgroup -S nonroot && \
+    adduser -S nonroot -G nonroot && \
+    mkdir app
+
+USER nonroot
+
+COPY --from=build --chown=nonroot:nonroot /workspace/build/libs/demo-*.jar /app/app.jar
 
 WORKDIR app
 

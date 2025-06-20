@@ -22,10 +22,14 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
+      - name: Install QEMU
+        uses: docker/setup-qemu-action@v3
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./Dockerfile
+          platforms: linux/arm64
           push: true
           tags: registry-tlac.duckdns.org/${{ vars.ARTIFACT_NAME }}:${{ env.version }}
