@@ -5,7 +5,7 @@ on:
 
 jobs:
   build-and-push:
-    if: ${{ github.ref == 'refs/heads/main2'}}
+    if: ${{ github.ref == 'refs/heads/main'}}
     runs-on: ubuntu-latest
 
     steps:
@@ -15,24 +15,21 @@ jobs:
       - name: Get revision
         run: echo "version=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
 
-      - name: Print version
-        run: echo ${{ env.version }}
+      - name: Log in to private registry
+        uses: docker/login-action@v3
+        with:
+          registry: registry-tlac.duckdns.org
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 
-#      - name: Log in to private registry
-#        uses: docker/login-action@v3
-#        with:
-#          registry: registry-tlac.duckdns.org
-#          username: ${{ secrets.REGISTRY_USERNAME }}
-#          password: ${{ secrets.REGISTRY_PASSWORD }}
-#
-#      - name: Install QEMU
-#        uses: docker/setup-qemu-action@v3
-#
-#      - name: Build and push Docker image
-#        uses: docker/build-push-action@v5
-#        with:
-#          context: .
-#          file: ./Dockerfile
-#          platforms: linux/arm64
-#          push: true
-#          tags: registry-tlac.duckdns.org/${{ vars.ARTIFACT_NAME }}:${{ github.event.inputs.version }}
+      - name: Install QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/arm64
+          push: true
+          tags: registry-tlac.duckdns.org/${{ vars.ARTIFACT_NAME }}:${{ env.version }}
